@@ -39,32 +39,33 @@ def main():
     print(f"Välj en stad du tror att det är mycket {user_pokemon.mood} content i.")
 
 
-    city_dic = {"Göteborg": 25, "Stockholm": 5} #Namn+gläjde
+    city_dic_happy = {"Göteborg": 25, "Stockholm": 10} #Namn+gläjde
+    city_dic_angry = {"Göteborg": 5, "Stockholm": 30}
 
     city = input("Välj mellan Göteborg eller Stockholm: ")
     print("\nBeräknar mood'content...")
 
     if city == "Göteborg":
-        user_pokemon.health += city_dic["Göteborg"]
-        cpu_pokemon.health += city_dic['Stockholm']
+        user_pokemon.health += city_dic_happy["Göteborg"]
+        cpu_pokemon.health += city_dic_angry['Stockholm']
         print(f"{user_pokemon.name} valde {city} med mycket happy content!")
-        print(f"{user_pokemon.name} hälsa ökade med {city_dic['Göteborg']} livspoäng. Totala hälsa: {user_pokemon.health}")
+        print(f"{user_pokemon.name} hälsa ökade med {city_dic_happy['Göteborg']} livspoäng. Totala hälsa: {user_pokemon.health}")
         print("")
-        print(f"{cpu_pokemon.name} valde 'Stockholm' med mindre happy content")
-        print(f"{cpu_pokemon.name} hälsa ökade med {city_dic['Stockholm']} livspoäng. Totala hälsa: {cpu_pokemon.health}")
+        print(f"{cpu_pokemon.name} valde 'Stockholm' med mycket angry content")
+        print(f"{cpu_pokemon.name} hälsa ökade med {city_dic_angry['Stockholm']} livspoäng. Totala hälsa: {cpu_pokemon.health}")
         print("")
 
     elif city == "Stockholm":
-        user_pokemon.health += city_dic["Stockholm"]
-        cpu_pokemon.health += city_dic['Göteborg']
+        user_pokemon.health += city_dic_happy["Stockholm"]
+        cpu_pokemon.health += city_dic_angry['Göteborg']
 
         print(f"{user_pokemon.name} valde {city} med inte så mycket happy content")
         print("")
-        print(f"{cpu_pokemon.name} valde 'Göteborg' med mycket happy content")
+        print(f"{cpu_pokemon.name} valde 'Göteborg' med inte så mycket angry content")
         print("")
-        print(f"{user_pokemon.name} hälsa ökade med {city_dic['Stockholm']}. Totala hälsa: {user_pokemon.health}")
+        print(f"{user_pokemon.name} hälsa ökade med {city_dic_happy['Stockholm']}. Totala hälsa: {user_pokemon.health}")
         print("")
-        print(f"{cpu_pokemon.name} hälsa ökade med {city_dic['Göteborg']}. Totala hälsa: {cpu_pokemon.health}")
+        print(f"{cpu_pokemon.name} hälsa ökade med {city_dic_angry['Göteborg']}. Totala hälsa: {cpu_pokemon.health}")
         print("")
 
     print("*** Time to fight! ***")
@@ -75,19 +76,23 @@ def main():
             print(f"You ==> attacked ==> {cpu_pokemon.name}!")
             print(f"{cpu_pokemon.name} health: {cpu_pokemon.health}")
 
-        elif user_choose == 2:
+        if user_choose == 2:
             print(f"You =/= Standby =/= {cpu_pokemon.name}")
 
         if cpu_pokemon.health <= 0:
             print("*** Wo hoo! You won! ***")
             break
 
-        elif user_pokemon.health <= 0:
+        user_pokemon.health -= cpu_pokemon.attack
+        print(f"Aggressive Ada ==> attacked ==> you!\nYour health: {user_pokemon.health}\n")
+
+        if user_pokemon.health <= 0:
             print("*** Oh no! You died! ***")
             break
 
-        user_pokemon.health -= cpu_pokemon.attack
-        print(f"Aggressive Ada ==> attacked ==> you!\nYour health: {user_pokemon.health}\n")
+
+
+
 
 
 if __name__ == '__main__':

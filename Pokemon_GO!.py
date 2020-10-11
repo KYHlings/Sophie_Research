@@ -28,11 +28,12 @@ def main():
     user_pokemon = Poketer("Happy Hasse", "happy", 100, 25)
     cpu_pokemon = Poketer("Aggressive Ada", "angry", 100, 25)
 
-    user = User("Martin")
+    username = input("What's your name?: ")
+    user = User(username)
     cpu = User("CPU")
     user.add_team(user_pokemon)
     cpu.add_team(cpu_pokemon)
-    print(f"Du valde {user_pokemon.name}")
+    print(f"Hej {user.name}! Du valde {user_pokemon.name}")
     print(f"Din motståndare: {cpu_pokemon.name}")
     print(f"{user.name}, det är din tur! ")
     print(f"Välj en stad du tror att det är mycket {user_pokemon.mood} content i.")
@@ -73,18 +74,20 @@ def main():
             cpu_pokemon.health -= user_pokemon.attack
             print(f"You ==> attacked ==> {cpu_pokemon.name}!")
             print(f"{cpu_pokemon.name} health: {cpu_pokemon.health}")
+
         elif user_choose == 2:
             print(f"You =/= Standby =/= {cpu_pokemon.name}")
+
+        if cpu_pokemon.health <= 0:
+            print("*** Wo hoo! You won! ***")
+            break
+
+        elif user_pokemon.health <= 0:
+            print("*** Oh no! You died! ***")
+            break
+
         user_pokemon.health -= cpu_pokemon.attack
         print(f"Aggressive Ada ==> attacked ==> you!\nYour health: {user_pokemon.health}\n")
-
-        if user_pokemon.health <= 0:
-            print("Oh no! You died!")
-            break
-
-        elif cpu_pokemon.attack <= 0:
-            print("Wo hoo! You won!")
-            break
 
 
 if __name__ == '__main__':

@@ -68,12 +68,12 @@ def main():
 
     print("*** Time to fight! ***")
     while True:
-        user_choose = input("Choose your move! \n1. Attack\n2. Standby\n>>> ")
-        if user_choose == "1":
+        user_choose = int(input("Choose your move! \n1. Attack\n2. Standby\n>>> "))
+        if user_choose == 1:
             cpu_pokemon.health -= user_pokemon.attack
             print(f"You ==> attacked ==> {cpu_pokemon.name}!")
             print(f"{cpu_pokemon.name} health: {cpu_pokemon.health}")
-        elif user_choose == "2":
+        elif user_choose == 2:
             print(f"You =/= Standby =/= {cpu_pokemon.name}")
         user_pokemon.health -= cpu_pokemon.attack
         print(f"Aggressive Ada ==> attacked ==> you!\nYour health: {user_pokemon.health}\n")

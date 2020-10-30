@@ -3,7 +3,7 @@ from random import randint
 import pygame as pg
 import sys
 from My_Own.constants import *
-from mood_score import calc_mood_score
+from My_Own.mood_score import calc_mood_score
 
 pg.init()
 

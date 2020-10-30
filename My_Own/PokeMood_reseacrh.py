@@ -1,8 +1,19 @@
+from random import randint
+
 import pygame as pg
 import sys
 from My_Own.constants import *
+from mood_score import calc_mood_score
 
 pg.init()
+
+
+def music_intro(intro_song):
+    pg.mixer.init()
+    pg.mixer.music.load(intro_song)
+    pg.mixer.music.play(-1)
+    pg.mixer.music.set_volume(0.0)
+
 
 display_width = 800
 display_height = 600
@@ -13,18 +24,66 @@ pg.display.set_caption('Demo - PokeMood')
 clock = pg.time.Clock()
 crashed = False
 
-second_surface = pg.Surface((800, 600))
 base_font = pg.font.SysFont("roboto mono", 30, True)
 
 bg = pg.image.load("Background_forest.jpg").convert()
 background = pg.transform.scale(bg, (800, 600))
 screen.blit(background, (0, 0))
 
-# logo = pg.image.load("LOGO.PNG")
+# logo = pg.image.load("LOGO2.PNG")
 # logo = pg.transform.scale(logo, (300, 185))
 
 shield = pg.image.load("shield_white.png")
 sword = pg.image.load("sword_resized.png")
+
+
+
+class Poketer:
+    def __init__(self, name, mood, color, health, max_health, attack, catchword, img_name):
+        self.name = name
+        self.mood = mood
+        self.health = health
+        self.max_health = max_health
+        self.attack = attack
+        self.color = color
+        self.catchword = catchword
+        self.image = pg.image.load(img_name).convert_alpha()
+
+    def add_health(self, health_score):
+        result = self.health + health_score
+        return result
+
+    def add_max_health(self, max_health_score):
+        result = self.max_health + max_health_score
+        self.max_health = result
+        return self.max_health
+
+    def get_health(self):
+        return self.health
+
+    def attack_fnc(self, opponent_pokemon):
+        miss_chance = randint(1, 6)
+        crit_chance = randint(1, 6)
+        dmg_modifier = randint(-3, 3)
+        if miss_chance <= 5:
+            if crit_chance >= 5:
+                opponent_pokemon.health = opponent_pokemon.health - (self.attack + dmg_modifier) * 2
+                text_speech(screen, "RobotoSlab-Medium.ttf", 15, "Kritisk träff!", BLACK, 300, 150, True)
+                return opponent_pokemon.health
+            else:
+                opponent_pokemon.health = opponent_pokemon.health - (self.attack + dmg_modifier)
+                text_speech(screen, "RobotoSlab-Medium.ttf", 15, "Attacken träffade!", BLACK, 300, 150, True)
+                return opponent_pokemon.health
+        else:
+            text_speech(screen, "RobotoSlab-Medium.ttf", 15, "Attacken missade!", BLACK, 300, 150, True)
+
+
+gunnar = Poketer("Glada Gunnar", 'happy', 'yellow', 50, 50, 45, catchword="#YOLO", img_name="Green_monster_resized.png")
+ada = Poketer("Aggressiva Ada", 'angry', 'red', 50, 50, 45, catchword="#FTW", img_name="Pink_dragon_01.png")
+
+
+# louise = Poketer("Ledsna Louise", 'sad', 'blue', 50, 50, 45, catchword="#TGIF")
+# kalle = Poketer("Kärleksfulla Kalle", 'loving', 'magenta', 50, 50, 45, catchword="#XOXO")
 
 
 def text_input(input_rect, user_text):
@@ -36,7 +95,7 @@ def text_input(input_rect, user_text):
 
 def vs_logo():
     vs_sign = pg.image.load("VS.PNG")
-    vs_sign = pg.transform.scale(vs_sign, (200,150))
+    vs_sign = pg.transform.scale(vs_sign, (200, 150))
     screen.blit(vs_sign, (300, 225))
 
 
@@ -49,19 +108,26 @@ def text_speech(screen, font: str, size: int, text: str, color, x, y, bold: bool
     screen.blit(text, textRect)
 
 
-def Aggressive_Ada(x, y, a ,b):
-    pink_dragon = pg.image.load('Pink_dragon_01.png').convert_alpha()
-    screen.blit(pink_dragon, (x, y))
-    text_speech(screen, "fonts/RobotoSlab-Medium.ttf", 15, "Aggressive Ada", RED, a, b, True)
-    text_speech(screen, "fonts/RobotoSlab-Medium.ttf", 15, "Stats: HP: 123, Attack: 20, Mood: Angry", WHITE, 630, 575,
+def Aggressive_Ada(x, y, a, b):
+    mood_score = calc_mood_score(ada.mood, "Stockholm", live=False)
+    result1 = ada.add_max_health(mood_score)
+    result2 = ada.add_health(mood_score)
+    screen.blit(ada.image, (x, y))
+    text_speech(screen, "RobotoSlab-Medium.ttf", 15, f"{ada.name}", ada.color, a, b, True)
+    text_speech(screen, "RobotoSlab-Medium.ttf", 15, f"Stats: HP: {result1}, Attack: {ada.attack}, Mood: {ada.mood}",
+                WHITE, 630, 575,
                 True)
 
 
-def Happy_Hasse(x, y, a, b):
-    green_monster = pg.image.load('../../Poke-mood/Pygame/Green_monster_resized.png').convert_alpha()
-    screen.blit(green_monster, (x, y))
-    text_speech(screen, "fonts/RobotoSlab-Medium.ttf", 15, "Happy Hasse", BLUE, a, b, True)
-    text_speech(screen, "fonts/RobotoSlab-Medium.ttf", 15, "Stats: HP: 113, Attack: 20, Mood: Happy", WHITE, 170, 20,
+def Glada_Gunnar(x, y, a, b):
+    mood_score = calc_mood_score(gunnar.mood, "Göteborg", live=False)
+    result1 = gunnar.add_max_health(mood_score)
+    print(result1)
+    result2 = gunnar.add_health(mood_score)
+    screen.blit(gunnar.image, (x, y))
+    text_speech(screen, "RobotoSlab-Medium.ttf", 15, f"{gunnar.name}", gunnar.color, a, b, True)
+    text_speech(screen, "RobotoSlab-Medium.ttf", 15,
+                f"Stats: HP: {result1}, Attack: {gunnar.attack}, Mood: {gunnar.mood}", WHITE, 170, 20,
                 True)
 
 
@@ -80,12 +146,12 @@ def battle_time_button(mouse):
     if 275 <= mouse[0] <= 275 + 240 and 245 <= mouse[1] <= 225 + 100:
         pg.draw.rect(screen, BLACK, (285, 245, 225, 70), 3)
         pg.draw.rect(screen, COLOR_LIGHT_SELECTED, (287, 247, 221, 66))
-        text_speech(screen, "fonts/RobotoSlab-Black.ttf", 30, "Battle time!", BLACK, display_width / 2.02,
+        text_speech(screen, "RobotoSlab-Black.ttf", 30, "Battle time!", BLACK, display_width / 2.02,
                     display_height / 2.15, True)
     else:
         pg.draw.rect(screen, BLACK, (285, 245, 225, 70), 3)
         pg.draw.rect(screen, COLOR_LIGHT_UNSELECTED, (287, 247, 221, 66))
-        text_speech(screen, "fonts/RobotoSlab-Black.ttf", 30, "Battle time!", BLACK, display_width / 2.02,
+        text_speech(screen, "RobotoSlab-Black.ttf", 30, "Battle time!", BLACK, display_width / 2.02,
                     display_height / 2.15, True)
 
 
@@ -93,63 +159,66 @@ def back_button(mouse):
     if 30 <= mouse[0] <= 30 + 140 and 540 <= mouse[1] <= 540 + 40:
         pg.draw.rect(screen, COLOR_LIGHT_SELECTED, [32, 542, 137, 37])
         pg.draw.rect(screen, BLACK, [30, 540, 140, 40], 3)
-        text_speech(screen, "fonts/RobotoSlab-Black.ttf", 25, "BACK", BLACK, 97, 558, True)
+        text_speech(screen, "RobotoSlab-Black.ttf", 25, "BACK", BLACK, 97, 558, True)
     else:
         pg.draw.rect(screen, COLOR_LIGHT_UNSELECTED, [32, 542, 137, 37])
         pg.draw.rect(screen, BLACK, [30, 540, 140, 40], 3)
-        text_speech(screen, "fonts/RobotoSlab-Black.ttf", 25, "BACK", BLACK, 97, 558, True)
+        text_speech(screen, "RobotoSlab-Black.ttf", 25, "BACK", BLACK, 97, 558, True)
 
 
 def attack_button(mouse):
     if 200 <= mouse[0] <= 200 + 150 and 430 <= mouse[1] <= 430 + 50:
         pg.draw.rect(screen, LIGHT_RED_SELECTED, [202, 432, 147, 47])
         pg.draw.rect(screen, BLACK, [200, 430, 150, 50], 3)
-        text_speech(screen, "fonts/RobotoSlab-Black.ttf", 25, "Attack", BLACK, 272, 453, True)
+        text_speech(screen, "RobotoSlab-Black.ttf", 25, "Attack", BLACK, 272, 453, True)
     else:
-        pg.draw.rect(screen, LIGHT_RED_UNSELECTED , [202, 432, 147, 47])
+        pg.draw.rect(screen, LIGHT_RED_UNSELECTED, [202, 432, 147, 47])
         pg.draw.rect(screen, BLACK, [200, 430, 150, 50], 3)
-        text_speech(screen, "fonts/RobotoSlab-Black.ttf", 25, "Attack", BLACK, 272, 453, True)
+        text_speech(screen, "RobotoSlab-Black.ttf", 25, "Attack", BLACK, 272, 453, True)
 
 
 def block_button(mouse):
     if 445 <= mouse[0] <= 445 + 150 and 430 <= mouse[1] <= 430 + 50:
         pg.draw.rect(screen, LIGHT_BLUE_SELECTED, [447, 432, 147, 47])
         pg.draw.rect(screen, BLACK, [445, 430, 150, 50], 3)
-        text_speech(screen, "fonts/RobotoSlab-Black.ttf", 25, "Block", BLACK, 517, 453, True)
+        text_speech(screen, "RobotoSlab-Black.ttf", 25, "Block", BLACK, 517, 453, True)
     else:
 
         pg.draw.rect(screen, LIGHT_BLUE_UNSELECTED, [447, 432, 147, 47])
         pg.draw.rect(screen, BLACK, [445, 430, 150, 50], 3)
-        text_speech(screen, "fonts/RobotoSlab-Black.ttf", 25, "Block", BLACK, 517, 453, True)
+        text_speech(screen, "RobotoSlab-Black.ttf", 25, "Block", BLACK, 517, 453, True)
 
 
 def chat_bubble_left():
-    left = pg.image.load('Chat_bubble_left.png').convert()
+    left = pg.image.load('Chat_bubble_left.png').convert_alpha()
     left_small = pg.transform.scale(left, (300, 170))
-    second_surface.blit(left_small, (250, 50))
-    text_speech(second_surface, "fonts/RobotoSlab-Medium.ttf", 15, "Moodscore: 113", BLACK, 390, 135, True)
+    screen.blit(left_small, (250, 50))
+    mood_score = calc_mood_score(gunnar.mood, "Göteborg", live=False)
+    text_speech(screen, "RobotoSlab-Medium.ttf", 15, f"Moodscore: {mood_score}", BLACK, 390, 135, True)
 
 
 def chat_bubble_right():
-    right = pg.image.load('Chat_bubble_right.png').convert()
+    right = pg.image.load('Chat_bubble_right.png').convert_alpha()
     right_small = pg.transform.scale(right, (300, 170))
-    second_surface.blit(right_small, (260, 350))
-    text_speech(second_surface, "fonts/RobotoSlab-Medium.ttf", 15, "Moodscore: 123", BLACK, 370, 435, True)
+    screen.blit(right_small, (260, 350))
+    mood_score = calc_mood_score(ada.mood, "Stockholm", live=False)
+    text_speech(screen, "RobotoSlab-Medium.ttf", 15, f"Moodscore: {mood_score}", BLACK, 370, 435, True)
 
 
 button = 0
 click = False
 
+
 def battle_menu():
     global button
-    active = False
-    user_text = ''
+    # active = False
+    # user_text = ''
+    music_intro("intro_song_1.mp3")
     while True:
         screen.fill(WHITE)
         screen.blit(background, (0, 0))
         Aggressive_Ada(520, 300, 640, 300)
-        Happy_Hasse(8, 30, 122, 45)
-        screen.blit(second_surface, (0, 0))
+        Glada_Gunnar(8, 30, 122, 45)
 
         mx, my = pg.mouse.get_pos()
         mouse = pg.mouse.get_pos()
@@ -163,21 +232,22 @@ def battle_menu():
         # input_rect = pg.Rect(70, 535, 200, 40)
         # text_input(input_rect, user_text,)
 
-        text_speech(screen, "fonts/RobotoSlab-Medium.ttf", 15, "Press [enter] for moodscores", BLACK, 397, 330, True)
+        text_speech(screen, "RobotoSlab-Medium.ttf", 15, "Press [enter] for moodscores", BLACK, 397, 330, True)
 
         if battle_button_rect.collidepoint((mx, my)):
             if click:
+                pg.mixer.music.stop()
                 battle_time()
 
         if quit_button_rect.collidepoint((mx, my)):
             if click:
                 pg.quit()
-                sys.exit()
 
         if button == 1:
             chat_bubble_left()
 
         if button == 2:
+            chat_bubble_left()
             chat_bubble_right()
 
         click = False
@@ -220,7 +290,7 @@ def battle_time():
         screen.fill(WHITE)
         screen.blit(background, (0, 0))
         Aggressive_Ada(display_width * 0.63, display_height * 0.26, 650, 550)
-        Happy_Hasse(display_width * 0.03, display_height * 0.24, 122, 45)
+        Glada_Gunnar(display_width * 0.03, display_height * 0.24, 122, 45)
         mouse = pg.mouse.get_pos()
         vs_logo()
         quit_button_rect = pg.Rect(650, 30, 140, 40)
@@ -263,7 +333,7 @@ def block_func():
         screen.fill(WHITE)
         screen.blit(background, (0, 0))
         Aggressive_Ada(display_width * 0.63, display_height * 0.26, 650, 550)
-        Happy_Hasse(display_width * 0.03, display_height * 0.24, 122, 45)
+        Glada_Gunnar(display_width * 0.03, display_height * 0.24, 122, 45)
         screen.blit(shield, (305, 160))
         mouse = pg.mouse.get_pos()
 
@@ -305,8 +375,8 @@ def attack_func():
         screen.fill(WHITE)
         screen.blit(background, (0, 0))
         Aggressive_Ada(display_width * 0.63, display_height * 0.26, 650, 550)
-        Happy_Hasse(display_width * 0.03, display_height * 0.24, 122, 45)
-        screen.blit(sword, (315,170))
+        Glada_Gunnar(display_width * 0.03, display_height * 0.24, 122, 45)
+        screen.blit(sword, (315, 170))
         mouse = pg.mouse.get_pos()
 
         quit_button_rect = pg.Rect(650, 30, 140, 40)
@@ -320,7 +390,9 @@ def attack_func():
 
         block_button_rect = pg.Rect(445, 430, 150, 50)
         block_button(mouse)
-
+        atk = True
+        display_text = False
+        click = False
         mx, my = pg.mouse.get_pos()
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -330,31 +402,27 @@ def attack_func():
                 if event.key == pg.K_ESCAPE:
                     running = False
             if event.type == pg.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    click = True
                 if back_button_rect.collidepoint((mx, my)):
                     battle_menu()
                 if quit_button_rect.collidepoint((mx, my)):
                     pg.quit()
                 if block_button_rect.collidepoint((mx, my)):
                     block_func()
+                if attack_button_rect.collidepoint((mx, my)):
+
+                    temp = gunnar.attack_fnc(ada)
+                    print(temp)
 
 
-        pg.display.update()
-        clock.tick(60)
-
-
-def default_mall():
-    running = True
-    while running:
-        text_speech(screen, "fonts/RobotoSlab-Medium.ttf", 15, "OPTIONS", BLACK, 400, 300, True)
-        mx, my = pg.mouse.get_pos()
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                pg.quit()
-                sys.exit()
-            if event.type == pg.KEYDOWN:
-                if event.key == pg.K_ESCAPE:
-                    running = False
-
+                    # while atk:
+                    #     if click:
+                    #         display_text = True
+                    #         if display_text:
+                    #             gunnar.attack_fnc(ada)
+                    #             if click:
+                    #                 atk = False
         pg.display.update()
         clock.tick(60)
 

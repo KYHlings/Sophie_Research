@@ -53,6 +53,7 @@ class Poketer:
 gunnar = Poketer("Glada Gunnar", 'happy', 'yellow', 50, 50, 10, catchword="#YOLO", img_name="Green_monster_resized.png")
 ada = Poketer("Aggressiva Ada", 'angry', 'red', 50, 50, 10, catchword="#FTW", img_name="Pink_dragon_01.png")
 
+
 def attack_print():
     if attack_function(gunnar):
         return True
@@ -104,6 +105,14 @@ def special_attack(poketer):
             return active_health_gunnar
 
 
+def cpu_random_attack():
+    random_number = randint(1, 11)
+    if random_number <= 6:
+        return True
+    if random_number >= 7:
+        return False
+
+
 class StartScreen:
     def handle_keydown(self, key):
         if key == pg.K_SPACE:
@@ -150,10 +159,18 @@ class BattleScreen:
             if back_button_rect.collidepoint((mx, my)):
                 return StartScreen()
             if attack_button_rect.collidepoint((mx,my)):
-                attack_function(ada)
+                attack_function(gunnar)
+                if cpu_random_attack():
+                    attack_function(ada)
+                if not cpu_random_attack():
+                    special_attack(ada)
                 return AttackScreen()
             if block_button_rect.collidepoint((mx, my)):
                 special_attack(gunnar)
+                if cpu_random_attack():
+                    attack_function(ada)
+                if not cpu_random_attack():
+                    special_attack(ada)
                 return SpecialAttackScreen()
         return self
 
@@ -190,13 +207,21 @@ class AttackScreen:
                 sys.exit()
             if block_button_rect.collidepoint((mx, my)):
                 special_attack(gunnar)
+                if cpu_random_attack():
+                    attack_function(ada)
+                if not cpu_random_attack():
+                    special_attack(ada)
                 if active_health_ada <= 0:
                     return WinnerScreenGunnar()
                 if active_health_gunnar <= 0:
                     return WinnerScreenAda()
                 return SpecialAttackScreen()
             if attack_button_rect.collidepoint((mx, my)):
-                attack_function(ada)
+                attack_function(gunnar)
+                if cpu_random_attack():
+                    attack_function(ada)
+                if not cpu_random_attack():
+                    special_attack(ada)
                 if active_health_ada <= 0:
                     return WinnerScreenGunnar()
                 if active_health_gunnar <= 0:
@@ -238,6 +263,10 @@ class SpecialAttackScreen:
                 sys.exit()
             if attack_button_rect.collidepoint((mx, my)):
                 attack_function(gunnar)
+                if cpu_random_attack():
+                    attack_function(ada)
+                if not cpu_random_attack():
+                    special_attack(ada)
                 if active_health_ada <= 0:
                     return WinnerScreenGunnar()
                 if active_health_gunnar <= 0:
@@ -245,6 +274,10 @@ class SpecialAttackScreen:
                 return AttackScreen()
             if block_button_rect.collidepoint((mx, my)):
                 special_attack(gunnar)
+                if cpu_random_attack():
+                    attack_function(ada)
+                if not cpu_random_attack():
+                    special_attack(ada)
                 if active_health_ada <= 0:
                     return WinnerScreenGunnar()
                 if active_health_gunnar <= 0:

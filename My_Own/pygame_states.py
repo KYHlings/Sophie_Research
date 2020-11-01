@@ -16,15 +16,10 @@ background_win = pg.transform.scale(background_win, (800, 600))
 logo = pg.image.load("LOGO.PNG")
 logo = pg.transform.scale(logo, (360, 222))
 
-
-
 pg.init()
 width = 800
 height = 600
 screen = pg.display.set_mode((width, height))
-
-myfont = pg.font.SysFont('Calibri', 20)
-
 
 def text_speech(screen, font: str, size: int, text: str, color, x, y, bold: bool):
     font = pg.font.Font(font, size)

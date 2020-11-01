@@ -190,16 +190,16 @@ class AttackScreen:
                 sys.exit()
             if block_button_rect.collidepoint((mx, my)):
                 special_attack(gunnar)
-                if special_attack(gunnar) <= 0:
+                if active_health_ada <= 0:
                     return WinnerScreenGunnar()
-                if special_attack(ada) <= 0:
+                if active_health_gunnar <= 0:
                     return WinnerScreenAda()
                 return SpecialAttackScreen()
             if attack_button_rect.collidepoint((mx, my)):
                 attack_function(ada)
-                if attack_function(gunnar) <= 0:
+                if active_health_ada <= 0:
                     return WinnerScreenGunnar()
-                if attack_function(ada) <= 0:
+                if active_health_gunnar <= 0:
                     return WinnerScreenAda()
             return self
 
@@ -213,10 +213,6 @@ class AttackScreen:
         attack_button()
         special_attack_button()
         sword()
-        if attack_print():
-            text_speech(screen, "RobotoSlab-Medium.ttf", 15, "Gunnar Attacked", BLACK, 250, 150, True)
-        if not attack_print():
-            text_speech(screen, "RobotoSlab-Medium.ttf", 15, "Ada attacked", BLACK, 250, 250, True)
 
 
 click = False
@@ -242,16 +238,16 @@ class SpecialAttackScreen:
                 sys.exit()
             if attack_button_rect.collidepoint((mx, my)):
                 attack_function(gunnar)
-                if attack_function(gunnar) <= 0:
+                if active_health_ada <= 0:
                     return WinnerScreenGunnar()
-                if attack_function(ada) <= 0:
+                if active_health_gunnar <= 0:
                     return WinnerScreenAda()
                 return AttackScreen()
             if block_button_rect.collidepoint((mx, my)):
                 special_attack(gunnar)
-                if special_attack(gunnar) <= 0:
+                if active_health_ada <= 0:
                     return WinnerScreenGunnar()
-                if special_attack(ada) <= 0:
+                if active_health_gunnar <= 0:
                     return WinnerScreenAda()
         return self
 

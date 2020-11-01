@@ -53,13 +53,6 @@ gunnar = Poketer("Glada Gunnar", 'happy', 'yellow', 50, 50, 10, catchword="#YOLO
 ada = Poketer("Aggressiva Ada", 'angry', 'red', 50, 50, 10, catchword="#FTW", img_name="Pink_dragon_01.png")
 
 
-def attack_print():
-    if attack_function(gunnar):
-        return True
-    if attack_function(ada):
-        return False
-
-
 def update_max_health(poketer, city):
     mood_score = calc_mood_score(poketer.mood, city, live=False)
     health_with_mood_score = poketer.add_health(mood_score)
@@ -155,7 +148,7 @@ class BattleScreen:
         quit_button_rect = pg.Rect(650, 30, 140, 40)
         back_button_rect = pg.Rect(30, 540, 140, 40)
         attack_button_rect = pg.Rect(200, 430, 150, 50)
-        block_button_rect = pg.Rect(445, 430, 150, 50)
+        special_attack_button_rect = pg.Rect(445, 430, 150, 50)
         if button == 1:
             if quit_button_rect.collidepoint((mx, my)):
                 sys.exit()
@@ -171,7 +164,7 @@ class BattleScreen:
                     special_attack(ada)
                     text_ada = "Ada special attacked Gunnar!"
                 return AttackScreen()
-            if block_button_rect.collidepoint((mx, my)):
+            if special_attack_button_rect.collidepoint((mx, my)):
                 special_attack(gunnar)
                 text_gunnar = "Gunnar special attacked Ada!"
                 if cpu_random_attack():
@@ -284,7 +277,7 @@ class SpecialAttackScreen:
         quit_button_rect = pg.Rect(650, 30, 140, 40)
         back_button_rect = pg.Rect(30, 540, 140, 40)
         attack_button_rect = pg.Rect(200, 430, 150, 50)
-        block_button_rect = pg.Rect(445, 430, 150, 50)
+        special_attack_button_rect = pg.Rect(445, 430, 150, 50)
         if button == 1:
             if back_button_rect.collidepoint((mx, my)):
                 return BattleScreen()
@@ -304,7 +297,7 @@ class SpecialAttackScreen:
                 if active_health_gunnar <= 0:
                     return WinnerScreenAda()
                 return AttackScreen()
-            if block_button_rect.collidepoint((mx, my)):
+            if special_attack_button_rect.collidepoint((mx, my)):
                 special_attack(gunnar)
                 text_gunnar = 'Gunnar special attacked Ada!'
                 if cpu_random_attack():
@@ -552,7 +545,7 @@ def music_intro(intro_song):
     pg.mixer.init()
     pg.mixer.music.load(intro_song)
     pg.mixer.music.play(-1)
-    pg.mixer.music.set_volume(0.0)
+    pg.mixer.music.set_volume(0.1)
 
 
 if __name__ == '__main__':

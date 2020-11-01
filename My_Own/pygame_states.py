@@ -311,7 +311,7 @@ class WinnerScreenAda:
     def render(self, screen):
         screen.fill(WHITE)
         screen.blit(background_win, (0, 0))
-        ada_win_pic = pg.image.load("Pink_dragon_06.png")
+        ada_win_pic = pg.image.load("Pink_dragon8.PNG")
         ada_win_pic = pg.transform.scale(ada_win_pic, (350, 350))
         screen.blit(ada_win_pic, (220, 255))
         gunnar_lose = pg.transform.scale(gunnar.image, (200, 200))

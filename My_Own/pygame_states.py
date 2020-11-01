@@ -16,12 +16,14 @@ background_win = pg.transform.scale(background_win, (800, 600))
 logo = pg.image.load("LOGO.PNG")
 logo = pg.transform.scale(logo, (360, 222))
 
+
+
 pg.init()
 width = 800
 height = 600
 screen = pg.display.set_mode((width, height))
 
-myfont = pg.font.SysFont('Arial', 20)
+myfont = pg.font.SysFont('Calibri', 20)
 
 
 def text_speech(screen, font: str, size: int, text: str, color, x, y, bold: bool):
@@ -143,6 +145,8 @@ class StartScreen:
         text_speech(screen, "RobotoSlab-Medium.ttf", 15, "Press [enter] for moodscores", BLACK, 397, 330, True)
 
 
+text_ada = ""
+text_gunnar = ""
 class BattleScreen:
     def handle_keydown(self, key):
         if key == pg.K_BACKSPACE:
@@ -150,6 +154,8 @@ class BattleScreen:
         return self
 
     def handle_button(self, button):
+        global text_ada
+        global text_gunnar
         mx, my = pg.mouse.get_pos()
         quit_button_rect = pg.Rect(650, 30, 140, 40)
         back_button_rect = pg.Rect(30, 540, 140, 40)
@@ -162,21 +168,29 @@ class BattleScreen:
                 return StartScreen()
             if attack_button_rect.collidepoint((mx,my)):
                 attack_function(gunnar)
+                text_gunnar = "Gunnar attacked Ada!"
                 if cpu_random_attack():
                     attack_function(ada)
+                    text_ada = "Ada attacked Gunnar!"
                 if not cpu_random_attack():
                     special_attack(ada)
+                    text_ada = "Ada special attacked Gunnar!"
                 return AttackScreen()
             if block_button_rect.collidepoint((mx, my)):
                 special_attack(gunnar)
+                text_gunnar = "Gunnar special attacked Ada!"
                 if cpu_random_attack():
                     attack_function(ada)
+                    text_ada = "Ada attacked Gunnar!"
                 if not cpu_random_attack():
                     special_attack(ada)
+                    text_ada = "Ada special attacked Gunnar!"
                 return SpecialAttackScreen()
         return self
 
     def render(self, screen):
+        global text_ada
+        global text_gunnar
         screen.fill(WHITE)
         screen.blit(background, (0, 0))
         aggressive_ada(504, 156, 650, 550, active_health_ada)
@@ -186,9 +200,10 @@ class BattleScreen:
         back_button()
         attack_button()
         special_attack_button()
+        text_speech(screen, "RobotoSlab-Medium.ttf", 15, text_gunnar, BLACK, 375, 100, True)
+        text_speech(screen, "RobotoSlab-Medium.ttf", 15, text_ada, BLACK, 375, 125, True)
 
-text_ada = ""
-text_gunnar = ""
+
 class AttackScreen:
     global active_health_ada
     global active_health_gunnar
@@ -204,19 +219,22 @@ class AttackScreen:
         mx, my = pg.mouse.get_pos()
         quit_button_rect = pg.Rect(650, 30, 140, 40)
         back_button_rect = pg.Rect(30, 540, 140, 40)
-        block_button_rect = pg.Rect(445, 430, 150, 50)
+        special_attack_button_rect = pg.Rect(445, 430, 150, 50)
         attack_button_rect = pg.Rect(200, 430, 150, 50)
         if button == 1:
             if back_button_rect.collidepoint((mx, my)):
                 return BattleScreen()
             if quit_button_rect.collidepoint((mx, my)):
                 sys.exit()
-            if block_button_rect.collidepoint((mx, my)):
+            if special_attack_button_rect.collidepoint((mx, my)):
                 special_attack(gunnar)
+                text_gunnar = "Gunnar special attacked Ada!"
                 if cpu_random_attack():
                     attack_function(ada)
+                    text_ada = "Ada attacked Gunnar!"
                 if not cpu_random_attack():
                     special_attack(ada)
+                    text_ada = "Ada special attacked Gunnar!"
                 if active_health_ada <= 0:
                     return WinnerScreenGunnar()
                 if active_health_gunnar <= 0:
@@ -230,7 +248,7 @@ class AttackScreen:
                     text_ada = 'Ada attacked Gunnar!'
                 if not cpu_random_attack():
                     special_attack(ada)
-                    text_ada = "Ada special attacked Gunnar"
+                    text_ada = "Ada special attacked Gunnar!"
                 if active_health_ada <= 0:
                     return WinnerScreenGunnar()
                 if active_health_gunnar <= 0:
@@ -240,6 +258,7 @@ class AttackScreen:
     def render(self, screen):
         global text_ada
         global text_gunnar
+
         screen.fill(WHITE)
         screen.blit(background, (0, 0))
         aggressive_ada(504, 156, 650, 550, active_health_ada)
@@ -249,10 +268,8 @@ class AttackScreen:
         attack_button()
         special_attack_button()
         sword()
-        text_blit_ada = myfont.render(text_ada, True, BLACK)
-        text_blit_gunnar = myfont.render(text_gunnar, True, BLACK)
-        screen.blit(text_blit_gunnar, (300, 100))
-        screen.blit(text_blit_ada, (300, 130))
+        text_speech(screen, "RobotoSlab-Medium.ttf", 20, text_gunnar, BLACK, 400, 100, True)
+        text_speech(screen, "RobotoSlab-Medium.ttf", 20, text_ada, BLACK, 400, 130, True)
 
 
 click = False
@@ -266,6 +283,8 @@ class SpecialAttackScreen:
         return self
 
     def handle_button(self, button):
+        global text_ada
+        global text_gunnar
         mx, my = pg.mouse.get_pos()
         quit_button_rect = pg.Rect(650, 30, 140, 40)
         back_button_rect = pg.Rect(30, 540, 140, 40)
@@ -278,10 +297,13 @@ class SpecialAttackScreen:
                 sys.exit()
             if attack_button_rect.collidepoint((mx, my)):
                 attack_function(gunnar)
+                text_gunnar = "Gunnar attacked Ada!"
                 if cpu_random_attack():
                     attack_function(ada)
+                    text_ada = "Ada attacked Gunnar!"
                 if not cpu_random_attack():
                     special_attack(ada)
+                    text_ada = "Ada special attacked Gunnar!"
                 if active_health_ada <= 0:
                     return WinnerScreenGunnar()
                 if active_health_gunnar <= 0:
@@ -289,10 +311,13 @@ class SpecialAttackScreen:
                 return AttackScreen()
             if block_button_rect.collidepoint((mx, my)):
                 special_attack(gunnar)
+                text_gunnar = 'Gunnar special attacked Ada!'
                 if cpu_random_attack():
                     attack_function(ada)
+                    text_ada = "Ada attacked Gunnar!"
                 if not cpu_random_attack():
                     special_attack(ada)
+                    text_ada = "Ada special attacked Gunnar!"
                 if active_health_ada <= 0:
                     return WinnerScreenGunnar()
                 if active_health_gunnar <= 0:
@@ -300,6 +325,8 @@ class SpecialAttackScreen:
         return self
 
     def render(self, screen):
+        global text_ada
+        global text_gunnar
         screen.fill(WHITE)
         screen.blit(background, (0, 0))
         aggressive_ada(504, 156, 650, 550, active_health_ada)
@@ -309,6 +336,8 @@ class SpecialAttackScreen:
         attack_button()
         special_attack_button()
         shield()
+        text_speech(screen, "RobotoSlab-Medium.ttf", 20, text_gunnar, BLACK, 400, 100, True)
+        text_speech(screen, "RobotoSlab-Medium.ttf", 20, text_ada, BLACK, 400, 130, True)
 
 
 class WinnerScreenGunnar:

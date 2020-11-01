@@ -21,6 +21,8 @@ width = 800
 height = 600
 screen = pg.display.set_mode((width, height))
 
+myfont = pg.font.SysFont('Arial', 20)
+
 
 def text_speech(screen, font: str, size: int, text: str, color, x, y, bold: bool):
     font = pg.font.Font(font, size)
@@ -185,16 +187,20 @@ class BattleScreen:
         attack_button()
         special_attack_button()
 
-
+text_ada = ""
+text_gunnar = ""
 class AttackScreen:
     global active_health_ada
     global active_health_gunnar
+
     def handle_keydown(self, key):
         if key == pg.K_ESCAPE:
             return StartScreen()
         return self
 
     def handle_button(self, button):
+        global text_ada
+        global text_gunnar
         mx, my = pg.mouse.get_pos()
         quit_button_rect = pg.Rect(650, 30, 140, 40)
         back_button_rect = pg.Rect(30, 540, 140, 40)
@@ -218,10 +224,13 @@ class AttackScreen:
                 return SpecialAttackScreen()
             if attack_button_rect.collidepoint((mx, my)):
                 attack_function(gunnar)
+                text_gunnar = 'Gunnar attacked Ada!'
                 if cpu_random_attack():
                     attack_function(ada)
+                    text_ada = 'Ada attacked Gunnar!'
                 if not cpu_random_attack():
                     special_attack(ada)
+                    text_ada = "Ada special attacked Gunnar"
                 if active_health_ada <= 0:
                     return WinnerScreenGunnar()
                 if active_health_gunnar <= 0:
@@ -229,6 +238,8 @@ class AttackScreen:
             return self
 
     def render(self, screen):
+        global text_ada
+        global text_gunnar
         screen.fill(WHITE)
         screen.blit(background, (0, 0))
         aggressive_ada(504, 156, 650, 550, active_health_ada)
@@ -238,6 +249,10 @@ class AttackScreen:
         attack_button()
         special_attack_button()
         sword()
+        text_blit_ada = myfont.render(text_ada, True, BLACK)
+        text_blit_gunnar = myfont.render(text_gunnar, True, BLACK)
+        screen.blit(text_blit_gunnar, (300, 100))
+        screen.blit(text_blit_ada, (300, 130))
 
 
 click = False

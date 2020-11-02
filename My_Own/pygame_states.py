@@ -168,6 +168,9 @@ class InstructionsScreen:
                 sys.exit()
 
     def render(self, screen):
+        text_mood_score = "Moodscore"
+        text_special_attack = "Special Attack"
+        text_quiz = "Quiz"
         screen.fill(WHITE)
         screen.blit(start_background, (0, 0))
         screen.blit(logo, (215, -55))
@@ -175,6 +178,9 @@ class InstructionsScreen:
         screen.blit(instructions_frame, (100, 100))
         back_button()
         quit_button()
+        text_speech(screen, "RobotoSlab-Medium.ttf", 17, text_mood_score, BLACK, 400, 150, True)
+        text_speech(screen, "RobotoSlab-Medium.ttf", 17, text_special_attack, BLACK, 400, 250, True)
+        text_speech(screen, "RobotoSlab-Medium.ttf", 17, text_quiz, BLACK, 400, 350, True)
 
 
 class StartScreen:

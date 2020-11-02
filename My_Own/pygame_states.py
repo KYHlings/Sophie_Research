@@ -7,6 +7,9 @@ from My_Own.mood_score import calc_mood_score
 bg = pg.image.load("Background_forest.jpg")
 background = pg.transform.scale(bg, (800, 600))
 
+start_background = pg.image.load("background_start.png")
+start_background = pg.transform.scale(start_background, (800, 600))
+
 vs_sign = pg.image.load("VS.PNG")
 vs_sign = pg.transform.scale(vs_sign, (200, 150))
 
@@ -103,6 +106,34 @@ def cpu_random_attack():
         return True
     if random_number >= 7:
         return False
+
+
+class MenuStartScreen:
+    def handle_keydown(self, key):
+        if key == pg.K_SPACE:
+            pass
+        return self
+
+    def handle_button(self, button):
+        mx, my = pg.mouse.get_pos()
+        start_game_button_rect = pg.Rect(285, 200, 225, 70)
+        instructions_button_rect = pg.Rect(285, 230, 225, 70)
+        quit_game_button_rect = pg.Rect(285, 260, 225, 70)
+        if button == 1:
+            if start_game_button_rect.collidepoint((mx, my)):
+                return StartScreen()
+            if instructions_button_rect.collidepoint((mx, my)):
+                return self
+
+    def render(self, screen):
+        screen.fill(WHITE)
+        screen.blit(start_background, (0, 0))
+        aggressive_ada(520, 300, 640, 300, active_health_ada)
+        glada_gunnar(8, 30, 122, 45, active_health_gunnar)
+        pop_up_bubbles(button)
+        battle_time_button()
+        quit_button()
+        text_speech(screen, "RobotoSlab-Medium.ttf", 15, "Press [enter] for moodscores", BLACK, 397, 330, True)
 
 
 class StartScreen:

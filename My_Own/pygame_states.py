@@ -30,10 +30,8 @@ logo = pg.transform.scale(logo, (360, 222))
 start_background = pg.image.load("background_start.png")
 start_background = pg.transform.scale(start_background, (800, 600))
 
-instructions_frame = pg.image.load("frame.png")
-instructions_frame = pg.transform.scale(instructions_frame, (600, 400))
-
-
+instructions_frame = pg.image.load("Frame_background.PNG")
+instructions_frame = pg.transform.scale(instructions_frame, (650, 450))
 
 
 
@@ -168,19 +166,11 @@ class InstructionsScreen:
                 sys.exit()
 
     def render(self, screen):
-        text_mood_score = "Moodscore"
-        text_special_attack = "Special Attack"
-        text_quiz = "Quiz"
         screen.fill(WHITE)
         screen.blit(start_background, (0, 0))
-        screen.blit(logo, (215, -55))
-        pg.draw.rect(screen, COLOR_LIGHT_UNSELECTED, (130, 120, 560, 340))
-        screen.blit(instructions_frame, (100, 100))
+        screen.blit(instructions_frame, (75, 75))
         back_button()
         quit_button()
-        text_speech(screen, "RobotoSlab-Medium.ttf", 17, text_mood_score, BLACK, 400, 150, True)
-        text_speech(screen, "RobotoSlab-Medium.ttf", 17, text_special_attack, BLACK, 400, 250, True)
-        text_speech(screen, "RobotoSlab-Medium.ttf", 17, text_quiz, BLACK, 400, 350, True)
 
 
 class StartScreen:
@@ -770,14 +760,14 @@ def music_intro():
     pg.mixer.init()
     pg.mixer.music.load("intro_song_1.mp3")
     pg.mixer.music.play(-1)
-    pg.mixer.music.set_volume(0.1)
+    pg.mixer.music.set_volume(0.0)
 
 
 def music_battle():
     pg.mixer.init()
     pg.mixer.music.load("battle_time_1.mp3")
     pg.mixer.music.play(-1)
-    pg.mixer.music.set_volume(0.1)
+    pg.mixer.music.set_volume(0.0)
 
 
 if __name__ == '__main__':

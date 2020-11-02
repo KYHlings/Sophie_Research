@@ -130,18 +130,17 @@ class MenuStartScreen:
             if start_game_button_rect.collidepoint((mx, my)):
                 return StartScreen()
             if instructions_button_rect.collidepoint((mx, my)):
-                return self
+                pass
+            if quit_game_button_rect.collidepoint((mx, my)):
+                pass
 
     def render(self, screen):
         screen.fill(WHITE)
         screen.blit(start_background, (0, 0))
-        aggressive_ada(520, 300, 640, 300, active_health_ada)
-        glada_gunnar(8, 30, 122, 45, active_health_gunnar)
-        pop_up_bubbles(button)
-        battle_time_button()
-        quit_button()
-        text_speech(screen, "RobotoSlab-Medium.ttf", 15, "Press [enter] for moodscores", BLACK, 397, 330, True)
-
+        screen.blit(logo, (215, -55))
+        start_game_button()
+        instructions_button()
+        quit_button_start()
 
 class StartScreen:
     def handle_keydown(self, key):
@@ -431,7 +430,7 @@ class WinnerScreenAda:
 def mainloop(screen):
     global button
     global click
-    state = StartScreen()
+    state = MenuStartScreen()
     music_intro("intro_song_1.mp3")
     while True:
         # Event handling
@@ -584,6 +583,48 @@ def music_intro(intro_song):
     pg.mixer.music.load(intro_song)
     pg.mixer.music.play(-1)
     pg.mixer.music.set_volume(0.0)
+
+
+def start_game_button():
+    mouse = pg.mouse.get_pos()
+    if 285 <= mouse[0] <= 285 + 225 and 280 <= mouse[1] <= 280 + 65:
+        pg.draw.rect(screen, BLACK, (285, 280, 225, 65), 3)
+        pg.draw.rect(screen, COLOR_LIGHT_SELECTED, (287, 282, 221, 61))
+        text_speech(screen, "RobotoSlab-Black.ttf", 30, "Start Game", BLACK, width / 2.02,
+                    height / 1.93, True)
+    else:
+        pg.draw.rect(screen, BLACK, (285, 280, 225, 65), 3)
+        pg.draw.rect(screen, COLOR_LIGHT_UNSELECTED, (287, 282, 221, 61))
+        text_speech(screen, "RobotoSlab-Black.ttf", 30, "Start Game", BLACK, width / 2.02,
+                    height / 1.93, True)
+
+
+def instructions_button():
+    mouse = pg.mouse.get_pos()
+    if 285 <= mouse[0] <= 285 + 225 and 360 <= mouse[1] <= 360 + 65:
+        pg.draw.rect(screen, BLACK, (285, 360, 225, 65), 3)
+        pg.draw.rect(screen, COLOR_LIGHT_SELECTED, (287, 362, 221, 61))
+        text_speech(screen, "RobotoSlab-Black.ttf", 30, "How To Play", BLACK, width / 2.02,
+                    height / 1.54, True)
+    else:
+        pg.draw.rect(screen, BLACK, (285, 360, 225, 65), 3)
+        pg.draw.rect(screen, COLOR_LIGHT_UNSELECTED, (287, 362, 221, 61))
+        text_speech(screen, "RobotoSlab-Black.ttf", 30, "How To Play", BLACK, width / 2.02,
+                    height / 1.54, True)
+
+
+def quit_button_start():
+    mouse = pg.mouse.get_pos()
+    if 285 <= mouse[0] <= 285 + 225 and 440 <= mouse[1] <= 440 + 65:
+        pg.draw.rect(screen, BLACK, (285, 440, 225, 65), 3)
+        pg.draw.rect(screen, COLOR_LIGHT_SELECTED, (287, 442, 221, 61))
+        text_speech(screen, "RobotoSlab-Black.ttf", 30, "Quit Game", BLACK, width / 2.02,
+                    height / 1.27, True)
+    else:
+        pg.draw.rect(screen, BLACK, (285, 440, 225, 65), 3)
+        pg.draw.rect(screen, COLOR_LIGHT_UNSELECTED, (287, 442, 221, 61))
+        text_speech(screen, "RobotoSlab-Black.ttf", 30, "Quit Game", BLACK, width / 2.02,
+                    height / 1.27, True)
 
 
 if __name__ == '__main__':

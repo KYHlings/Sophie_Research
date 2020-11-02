@@ -1,5 +1,5 @@
 import pickle
-from twitter_connect import twitter_connect
+from My_Own.twitter_connect import twitter_connect
 from tweepy import Cursor
 import warnings
 
